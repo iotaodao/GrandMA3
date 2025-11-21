@@ -307,32 +307,36 @@ const HelpModal = ({ onClose }: { onClose: () => void }) => (
           API_KEY=AIzaSyYourSecretKeyHere...
         </div>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-          *Примечание: Убедитесь, что ваш сборщик (Vite/Webpack) настроен на передачу process.env.API_KEY или настройте соответствующий DefinePlugin.
+          *Примечание: Убедитесь, что ваш сборщик (Vite/Webpack) настроен на передачу process.env.API_KEY.
         </p>
 
-        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>4. Запуск</h3>
+        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>4. Запуск и Production (PM2)</h3>
         <div style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
           <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-            <span style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}># Режим разработки</span>
+            <span style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}># Локальная разработка</span>
             npm run dev
           </div>
 
-          <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-            <span style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}># Сборка проекта</span>
-            npm run build
-          </div>
-
           <div>
-            <span style={{ color: 'var(--accent)', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}># Запуск через PM2 (Production)</span>
-            <span style={{ color: '#666' }}>// 1. Установка PM2 глобально</span><br/>
+            <span style={{ color: 'var(--accent)', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}># Развертывание (Production)</span>
+            
+            <span style={{ color: '#666' }}>// 1. Установка PM2</span><br/>
             npm install -g pm2<br/><br/>
             
-            <span style={{ color: '#666' }}>// 2. Запуск статики (порт 3000)</span><br/>
+            <span style={{ color: '#666' }}>// 2. Сборка приложения</span><br/>
+            npm run build<br/><br/>
+            
+            <span style={{ color: '#666' }}>// 3. Запуск сервера (порт 3000)</span><br/>
             pm2 serve dist 3000 --name "ma3-agent" --spa<br/><br/>
             
-            <span style={{ color: '#666' }}>// 3. Сохранение для автозапуска</span><br/>
+            <span style={{ color: '#666' }}>// 4. Настройка автозапуска</span><br/>
             pm2 save<br/>
-            pm2 startup
+            pm2 startup<br/><br/>
+
+            <span style={{ color: '#666' }}>// Полезные команды</span><br/>
+            pm2 status<br/>
+            pm2 restart ma3-agent<br/>
+            pm2 logs ma3-agent
           </div>
         </div>
       </div>
