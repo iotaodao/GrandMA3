@@ -37,7 +37,7 @@ const SNIPPETS: Record<string, Snippet[]> = {
 
 // --- Components ---
 
-const Header = () => (
+const Header = ({ onHelpClick }: { onHelpClick: () => void }) => (
   <header style={{
     backgroundColor: 'var(--bg-panel)',
     borderBottom: '1px solid var(--border)',
@@ -53,7 +53,29 @@ const Header = () => (
       }}>MA</div>
       <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>GrandMA3 Macro Agent</h1>
     </div>
-    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>AI-Powered Assistant</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <button 
+        onClick={onHelpClick}
+        style={{
+          background: 'transparent',
+          border: '1px solid var(--border)',
+          color: 'var(--text-muted)',
+          borderRadius: '50%',
+          width: '32px', 
+          height: '32px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1rem',
+          fontWeight: 'bold'
+        }}
+        title="Инструкция по установке"
+      >
+        ?
+      </button>
+      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>AI-Powered Assistant</span>
+    </div>
   </header>
 );
 
@@ -235,6 +257,72 @@ const SnippetChip: React.FC<{ label: string, onClick: () => void }> = ({ label, 
   </button>
 );
 
+const HelpModal = ({ onClose }: { onClose: () => void }) => (
+  <div style={{
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(0,0,0,0.8)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000
+  }} onClick={onClose}>
+    <div style={{
+      background: 'var(--bg-panel)',
+      padding: '2rem',
+      borderRadius: '8px',
+      maxWidth: '700px',
+      width: '90%',
+      border: '1px solid var(--border)',
+      maxHeight: '85vh',
+      overflowY: 'auto',
+      color: 'var(--text-main)',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+    }} onClick={e => e.stopPropagation()}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{ margin: 0, color: 'var(--accent)' }}>Установка на свой сервер</h2>
+        <Button onClick={onClose}>Закрыть</Button>
+      </div>
+      
+      <div style={{ lineHeight: '1.6', fontSize: '0.95rem' }}>
+        <p>Чтобы запустить это приложение на собственном сервере или локально, следуйте инструкции:</p>
+        
+        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>1. Предварительные требования</h3>
+        <ul style={{ paddingLeft: '1.5rem' }}>
+          <li>Node.js (версии 18 или выше)</li>
+          <li>npm или yarn</li>
+          <li>API ключ от Google Gemini (получить в AI Studio)</li>
+        </ul>
+
+        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>2. Установка</h3>
+        <div style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
+          git clone https://github.com/your-repo/ma3-agent.git<br/>
+          cd ma3-agent<br/>
+          npm install
+        </div>
+
+        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>3. Конфигурация</h3>
+        <p>Создайте файл <code>.env</code> в корне проекта и добавьте ваш API ключ:</p>
+        <div style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
+          API_KEY=AIzaSyYourSecretKeyHere...
+        </div>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+          *Примечание: Убедитесь, что ваш сборщик (Vite/Webpack) настроен на передачу process.env.API_KEY или настройте соответствующий DefinePlugin.
+        </p>
+
+        <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>4. Запуск</h3>
+        <div style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
+          # Режим разработки<br/>
+          npm run dev<br/><br/>
+          # Сборка для продакшена<br/>
+          npm run build<br/>
+          npm run preview
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 // --- Main App ---
 
 const App = () => {
@@ -243,6 +331,7 @@ const App = () => {
   const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Clear error when input changes
   useEffect(() => {
@@ -332,7 +421,7 @@ const App = () => {
 
   return (
     <>
-      <Header />
+      <Header onHelpClick={() => setShowHelp(true)} />
       <div style={{ 
         flex: 1, 
         display: 'flex', 
@@ -399,6 +488,7 @@ const App = () => {
           
         </div>
       </div>
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
     </>
   );
 };
