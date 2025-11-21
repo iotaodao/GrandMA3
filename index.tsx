@@ -312,11 +312,28 @@ const HelpModal = ({ onClose }: { onClose: () => void }) => (
 
         <h3 style={{ color: 'var(--text-muted)', marginTop: '1.5rem' }}>4. Запуск</h3>
         <div style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: '4px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
-          # Режим разработки<br/>
-          npm run dev<br/><br/>
-          # Сборка для продакшена<br/>
-          npm run build<br/>
-          npm run preview
+          <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+            <span style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}># Режим разработки</span>
+            npm run dev
+          </div>
+
+          <div style={{ marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+            <span style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '0.5rem' }}># Сборка проекта</span>
+            npm run build
+          </div>
+
+          <div>
+            <span style={{ color: 'var(--accent)', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}># Запуск через PM2 (Production)</span>
+            <span style={{ color: '#666' }}>// 1. Установка PM2 глобально</span><br/>
+            npm install -g pm2<br/><br/>
+            
+            <span style={{ color: '#666' }}>// 2. Запуск статики (порт 3000)</span><br/>
+            pm2 serve dist 3000 --name "ma3-agent" --spa<br/><br/>
+            
+            <span style={{ color: '#666' }}>// 3. Сохранение для автозапуска</span><br/>
+            pm2 save<br/>
+            pm2 startup
+          </div>
         </div>
       </div>
     </div>
